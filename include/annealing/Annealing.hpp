@@ -7,32 +7,44 @@
 
 #include "utils/Common.hpp"
 #include <cmath>
+#include <random>
+
 namespace Annealing {
     using namespace Utils;
-    template <class Solution>
+
+    template<class Solution>
     class Problem {
     protected:
+        std::random_device rd{};
+        Solution solution;
+
+    private:
         double coolingRate = 0.98;
-        double initialTemperature = 1e4;
+        double initialTemperature = 1e6;
         double finalTemperature = 1e-8;
         double epsilon = 1e-8;
-        int maxIterations = 1e1;
+        int maxIterations = 1e3;
 
-        Solution solution;
+        Solution solutionBackup;
+        double valueBackup;
 
     public:
         void setInitialTemperature(double _initialTemperature) {
             this->initialTemperature = _initialTemperature;
         }
+
         void setFinalTemperature(double _finalTemperature) {
             this->finalTemperature = _finalTemperature;
         }
+
         void setCoolingRate(double _coolingRate) {
             this->coolingRate = _coolingRate;
         }
+
         void setMaxIterations(int _maxIterations) {
             this->maxIterations = _maxIterations;
         }
+
         void setEpsilon(double _epsilon) {
             this->epsilon = _epsilon;
         }
@@ -45,7 +57,7 @@ namespace Annealing {
                 if (probability > 1) {
                     return true;
                 } else {
-                    double random = rand() / (double) RAND_MAX;
+                    double random = rd() / (double) std::random_device::max();
                     if (random < probability) {
                         return true;
                     }
@@ -59,6 +71,10 @@ namespace Annealing {
 
         virtual void updateSolution(double temperature) = 0;
 
+        virtual double evaluate() const {
+            return 0;
+        };
+
         virtual bool isGoal() const {
             return false;
         };
@@ -66,18 +82,25 @@ namespace Annealing {
     public:
 
         Solution solve() {
-            initSolution();
-            double temperature = initialTemperature;
-            while (temperature > finalTemperature) {
-                for (int i = 0; i < maxIterations; i++) {
+            bool isFirstIteration = true;
+            for (int i = 0; i < maxIterations; i++) {
+                double temperature = initialTemperature;
+                initSolution();
+                while (temperature > finalTemperature) {
                     updateSolution(temperature);
                     if (isGoal()) {
                         return solution;
                     }
+                    temperature *= coolingRate;
                 }
-                temperature *= coolingRate;
+                double value = evaluate();
+                if (isFirstIteration || value - valueBackup > epsilon) {
+                    std::swap(solution, solutionBackup);
+                    valueBackup = value;
+                }
+                isFirstIteration = false;
             }
-            return solution;
+            return solutionBackup;
         }
     };
 

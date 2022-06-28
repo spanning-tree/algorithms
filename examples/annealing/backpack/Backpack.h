@@ -28,6 +28,10 @@ namespace Backpack {
         Vec<Item> items;
     protected:
 
+        double evaluate() const override {
+            return totalValue;
+        }
+
         void initSolution() override {
             int n = items.size();
             solution.resize(n);
@@ -41,7 +45,7 @@ namespace Backpack {
         void updateSolution(double temperature) override {
 
             int n = items.size();
-            int index = rand() % n;
+            int index = rd() % n;
             int value = items[index].value;
             int weight = items[index].weight;
             if (solution[index] == 1) {
