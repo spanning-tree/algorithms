@@ -9,12 +9,12 @@
 #include <algorithm>
 #include <iostream>
 
-namespace Backpack {
+namespace Knapsack {
     using namespace Utils;
     using namespace Annealing;
     using Solution = Vec<int>;
 
-    class Backpack : public Problem<Solution> {
+    class Knapsack : public Problem<Solution> {
     protected:
         const int maxWeight;
         int totalWeight = 0;
@@ -72,7 +72,7 @@ namespace Backpack {
             std::cout << totalValue << std::endl;
         }
 
-        Backpack(int _maxWeight) : maxWeight(_maxWeight) {}
+        Knapsack(int _maxWeight) : maxWeight(_maxWeight) {}
     };
 }
 

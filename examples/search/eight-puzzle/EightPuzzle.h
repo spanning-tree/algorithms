@@ -17,7 +17,7 @@ namespace EightPuzzle {
     using Action = int;
     using Cost = int;
 
-    class EightPuzzle : public Problem<State, Action, Cost, HashCombine<int>> {
+    class EightPuzzle : public Problem<State, Action, Cost, VectorHash<int>> {
     protected:
         State targetState;
     protected:
@@ -26,7 +26,7 @@ namespace EightPuzzle {
         }
 
         Vec<Action> getActions(const State &state) const override {
-            Vec<Vec<int>> actions{
+            static const Vec<Vec<int>> actions{
                     {1, 3},
                     {0, 2, 4},
                     {1, 5},

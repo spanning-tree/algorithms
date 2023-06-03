@@ -7,7 +7,7 @@ namespace Utils {
     using Vec = std::vector<T>;
 
     template<class T>
-    class HashCombine {
+    class VectorHash {
     public:
         uint operator()(Vec<T> const &vec) const {
             std::size_t seed = vec.size();
