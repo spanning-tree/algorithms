@@ -6,7 +6,7 @@
 #include <stack>
 #include <unordered_map>
 #include <optional>
-#include "utils/HashCombine.hpp"
+#include "utils/VectorHash.hpp"
 
 namespace Utils {
     template<class T>
